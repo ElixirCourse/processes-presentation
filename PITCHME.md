@@ -360,20 +360,18 @@ end
 
 #HSLIDE
 ```elixir
-defmodule PEnum do
-  defp spawn_func(map_func) do
-    current_pid = self()
-    fn x ->
-      spawn(fn ->
-        send(current_pid, {self(), map_func.(x)})
-      end)
-    end
+defp spawn_func(map_func) do
+  current_pid = self()
+  fn x ->
+    spawn(fn ->
+      send(current_pid, {self(), map_func.(x)})
+    end)
   end
+end
 
-  defp receive_func(pid) do
-    receive do
-      {^pid, result} -> result
-    end
+defp receive_func(pid) do
+  receive do
+    {^pid, result} -> result
   end
 end
 ```
