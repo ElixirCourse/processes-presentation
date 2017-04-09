@@ -45,6 +45,9 @@
 ![Image-Absolute](assets/internet.jpeg)
 
 #HSLIDE
+![Image-Absolute](assets/fun1.jpg)
+
+#HSLIDE
 ![Image-Absolute](assets/fridge.jpg)
 
 #HSLIDE
