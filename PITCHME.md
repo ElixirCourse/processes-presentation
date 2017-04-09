@@ -14,6 +14,8 @@
 
 #HSLIDE
 ## Процеси в Erlang - как и защо? Малко история.
+
+#HSLIDE
 ![Image-Absolute](assets/erlang_movie.jpg)
 
 #HSLIDE
@@ -28,7 +30,7 @@
 ![Image-Absolute](assets/joe.jpg)
 
 #HSLIDE
-* По-добър начин за писане на Телеком програми.
+#### По-добър начин за писане на Телеком програми.
 ![Image-Absolute](assets/telecom.jpg)
 
 #HSLIDE
@@ -43,7 +45,7 @@
 ![Image-Absolute](assets/internet.jpeg)
 
 #HSLIDE
-![Image-Absolute](assets/fridge.jpeg)
+![Image-Absolute](assets/fridge.jpg)
 
 #HSLIDE
 #### Сериозно, да продължим напред: Говорехме за история на Erlang!
@@ -116,7 +118,7 @@
 * Erlang придобива потребители - 3-ма човека.  <!-- .element: class="fragment" -->
 
 #HSLIDE
-* Процесите започват да имат специален буфер, наречем 'кутия за съобщения' Mailbox.
+* Процесите започват да имат специален буфер, наречен 'кутия за съобщения' Mailbox.
 * Започват да могат да създават връзки помежду си.  <!-- .element: class="fragment" -->
 * Ако някой от тях получи грешка, друг може да бъде уведомен със специално съобщение и да реагира.  <!-- .element: class="fragment" -->
 
@@ -135,7 +137,7 @@
 #HSLIDE
 * Ражда първата абстрактна машина на Erlang, написана на C - JAM.
 * Преди C и други езици са разглеждани, и други абстрактни машини са разучавани.   <!-- .element: class="fragment" -->
-* Mike Williams е с доста повече опит от_Joe в C, затова той написва JAM.   <!-- .element: class="fragment" -->
+* Mike Williams е с доста повече опит от Joe в C, затова той написва JAM.   <!-- .element: class="fragment" -->
 
 #HSLIDE
 ![Image-Absolute](assets/works.png)
@@ -322,7 +324,8 @@ send(pid, {:say, "Arnold", "I'll be back!"})
 ```elixir
 pid = spawn(fn ->
   receive do
-    {sender, :ping} when is_pid(sender) -> send(sender, {self(), :pong})
+    {sender, :ping} when is_pid(sender) ->
+      send(sender, {self(), :pong})
   end
 end)
 
@@ -333,8 +336,6 @@ receive do
   {sender, :pong} when is_pid(sender) ->
     IO.puts([inspect(sender), " sends PONG!"])
 end
-
-# Ще се отпечата нещо като '#PID<0.150.0> sends PONG!'
 ```
 
 #HSLIDE
@@ -350,17 +351,26 @@ end
 ```elixir
 defmodule PEnum do
   def map(enumerable, map_func) do
-    enumerable |> Enum.map(spawn_func(map_func)) |> Enum.map(&receive_func/1)
+    enumerable
+    |> Enum.map(spawn_func(map_func))
+    |> Enum.map(&receive_func/1)
   end
+end
+```
 
+#HSLIDE
+```elixir
+defmodule PEnum do
   defp spawn_func(map_func) do
     current_pid = self()
     fn x ->
-      spawn(fn -> send(current_pid, {self(), map_func.(x)}) end)
+      spawn(fn ->
+        send(current_pid, {self(), map_func.(x)})
+      end)
     end
   end
 
-  def receive_func(pid) do
+  defp receive_func(pid) do
     receive do
       {^pid, result} -> result
     end
