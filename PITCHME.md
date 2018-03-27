@@ -310,7 +310,7 @@ send(pid, pattern2)
 pid = spawn(fn ->
   receive do
     :say_hi -> IO.puts("Hi!")
-    :say_by -> IO.puts("Bye!")
+    :say_bye -> IO.puts("Bye!")
     {:say, name, msg} -> IO.puts([name, " says ", msg])
   end
 end)
